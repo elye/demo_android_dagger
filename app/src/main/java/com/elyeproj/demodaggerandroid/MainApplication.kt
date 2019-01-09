@@ -6,7 +6,8 @@ import dagger.Module
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
-import dagger.android.DaggerApplication
+import dagger.android.support.AndroidSupportInjectionModule
+import dagger.android.support.DaggerApplication
 
 
 class MainApplication: DaggerApplication() {
@@ -15,7 +16,7 @@ class MainApplication: DaggerApplication() {
     }
 }
 
-@Component(modules = [AndroidInjectionModule::class, ActivityBuilder::class])
+@Component(modules = [AndroidSupportInjectionModule::class, ActivityBuilder::class])
 interface AppComponent: AndroidInjector<MainApplication> {
     @Component.Builder
     interface Builder {
