@@ -1,33 +1,28 @@
 package com.elyeproj.demodaggerandroid
 
-import android.app.Activity
-import android.app.Application
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
-import dagger.android.*
-import javax.inject.Inject
+import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
+import dagger.android.ContributesAndroidInjector
+import dagger.android.DaggerApplication
 
 
-class MainApplication: Application(), HasActivityInjector {
-
-    @Inject
-    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-
-    override fun onCreate() {
-        super.onCreate()
-        DaggerAppComponent
-            .create()
-            .inject(this)
-    }
-
-    override fun activityInjector(): AndroidInjector<Activity> {
-        return activityDispatchingAndroidInjector
+class MainApplication: DaggerApplication() {
+    override fun applicationInjector(): AndroidInjector<MainApplication> {
+        return DaggerAppComponent.builder().application(this).build()
     }
 }
 
 @Component(modules = [AndroidInjectionModule::class, ActivityBuilder::class])
-interface AppComponent {
-    fun inject(app: MainApplication)
+interface AppComponent: AndroidInjector<MainApplication> {
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun application(application: MainApplication): Builder
+        fun build(): AppComponent
+    }
 }
 
 @Module
