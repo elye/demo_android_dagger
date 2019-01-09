@@ -2,11 +2,9 @@ package com.elyeproj.demodaggerandroid
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import dagger.*
+import dagger.Component
+import dagger.Module
 import dagger.android.*
-import dagger.multibindings.ClassKey
-import dagger.multibindings.IntoMap
 import javax.inject.Inject
 
 
@@ -32,10 +30,8 @@ interface AppComponent {
     fun inject(app: MainApplication)
 }
 
-@Module(subcomponents = [MainActivityComponent::class])
+@Module
 abstract class ActivityBuilder {
-    @Binds
-    @IntoMap
-    @ClassKey(MainActivity::class)
-    abstract fun bindMainActivity(builder: MainActivityComponent.Builder): AndroidInjector.Factory<*>
+    @ContributesAndroidInjector(modules = [MainActivityModule::class])
+    abstract fun bindMainActivity(): MainActivity
 }
