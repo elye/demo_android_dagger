@@ -3,11 +3,11 @@ package com.elyeproj.demodaggerandroid
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
-import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import dagger.android.support.DaggerApplication
+import javax.inject.Scope
 
 
 class MainApplication: DaggerApplication() {
@@ -16,7 +16,7 @@ class MainApplication: DaggerApplication() {
     }
 }
 
-@Component(modules = [AndroidSupportInjectionModule::class, ActivityBuilder::class])
+@Component(modules = [AndroidSupportInjectionModule::class, AndroidInjectBuilder::class])
 interface AppComponent: AndroidInjector<MainApplication> {
     @Component.Builder
     interface Builder {
@@ -27,7 +27,21 @@ interface AppComponent: AndroidInjector<MainApplication> {
 }
 
 @Module
-abstract class ActivityBuilder {
+abstract class AndroidInjectBuilder {
+    @ActivityScope
     @ContributesAndroidInjector(modules = [MainActivityModule::class])
     abstract fun bindMainActivity(): MainActivity
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [MainFragmentModule::class])
+    abstract fun contributeMainFragment(): MainFragment
 }
+
+
+@Scope
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class FragmentScope
+
+@Scope
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+annotation class ActivityScope

@@ -9,21 +9,24 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-        @Inject lateinit var info : Info
+    @Inject lateinit var info : Info
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
-            my_text.text = info.text
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        my_text.text = info.text
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, MainFragment()).commit()
     }
+}
 
-    class Info {
-        val text = "Hello Dagger Android"
-    }
+class Info {
+    val text = "Hello Dagger Android"
+}
 
-    @Module
-    class MainActivityModule {
-        @Provides
-        fun getInfo() = Info()
-    }
+@Module
+class MainActivityModule {
+    @Provides
+    @ActivityScope
+    fun getInfo() = Info()
+}
