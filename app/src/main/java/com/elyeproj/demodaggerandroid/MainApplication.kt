@@ -1,6 +1,5 @@
 package com.elyeproj.demodaggerandroid
 
-import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.android.AndroidInjector
@@ -9,21 +8,16 @@ import dagger.android.support.AndroidSupportInjectionModule
 import dagger.android.support.DaggerApplication
 import javax.inject.Scope
 
-
 class MainApplication: DaggerApplication() {
     override fun applicationInjector(): AndroidInjector<MainApplication> {
-        return DaggerAppComponent.builder().application(this).build()
+        return DaggerAppComponent.factory().create(this)
     }
 }
 
 @Component(modules = [AndroidSupportInjectionModule::class, AndroidInjectBuilder::class])
 interface AppComponent: AndroidInjector<MainApplication> {
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: MainApplication): Builder
-        fun build(): AppComponent
-    }
+    @Component.Factory
+    interface Factory: AndroidInjector.Factory<MainApplication>
 }
 
 @Module
